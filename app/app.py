@@ -5,7 +5,7 @@ import secrets
 
 from flask import Flask, render_template, request
 from flask_wtf.csrf import CSRFProtect
-from .calculadora import sumar, restar, multiplicar, dividir
+from .calculadora import sumar, restar, multiplicar, dividir, potencia, modulo
 
 app = Flask(__name__)
 app.config["SECRET_KEY"] = os.environ.get("SECRET_KEY") or secrets.token_hex(32)
@@ -30,12 +30,16 @@ def index():
                 resultado = multiplicar(num1, num2)
             elif operacion == "dividir":
                 resultado = dividir(num1, num2)
+            elif operacion == "potencia":
+                resultado = potencia(num1, num2)
+            elif operacion == "modulo":
+                resultado = modulo(num1, num2)
             else:
                 resultado = "Operación no válida"
         except ValueError:
             resultado = "Error: Introduce números válidos"
-        except ZeroDivisionError:
-            resultado = "Error: No se puede dividir por cero"
+        except ZeroDivisionError as e:
+            resultado = f"Error: {e}"
 
     return render_template("index.html", resultado=resultado)
 
